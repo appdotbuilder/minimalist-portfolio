@@ -1,10 +1,19 @@
 
+import { db } from '../db';
+import { contactMessagesTable } from '../db/schema';
 import { type ContactMessage } from '../schema';
+import { desc } from 'drizzle-orm';
 
 export async function getContactMessages(): Promise<ContactMessage[]> {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is fetching all contact messages from the database.
-    // It should return messages ordered by created_at descending (newest first).
-    // This would typically be an admin-only endpoint.
-    return [];
+  try {
+    const results = await db.select()
+      .from(contactMessagesTable)
+      .orderBy(desc(contactMessagesTable.created_at))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Failed to fetch contact messages:', error);
+    throw error;
+  }
 }
